@@ -19,8 +19,25 @@ To implement the accommodation advisory tool, the following tools and technologi
 The dataset used for this project contains information about accommodation providers, including customer reviews and ratings.
 [Download Dataset](https://drive.google.com/file/d/1wYW_pLEEFluEejgkg_I2emxLjy9YZ5GG/view?usp=share_link)
 
+
 ## Submission Guidelines
 ### 1. Code Implementation:
+>accommodation_advisor/   
+|-- data/  
+|``` ```|-- dataset.csv ``` ``` ``` # Archivo CSV con los datos```  
+|-- src/  
+|``` ```|-- __init__.py  
+|``` ```|-- data_loader.py ``` ``` ``` # Clase para cargar el conjunto de datos```   
+|``` ```|-- data_preprocessor.py ``` ``` ```# Clase para preprocesar los datos```  
+|``` ```|-- model.py ``` ``` ```# Clase para el desarrollo del modelo de machine learning```  
+|``` ```|-- evaluation.py ``` ``` ``` # Clase para evaluar el rendimiento del modelo```  
+|-- scripts/  
+|``` ```|-- run_project.py ``` ``` ``` # Script principal para ejecutar el proyecto```     
+|-- docs/  
+|``` ```|-- documentation.md ``` ``` ``` # Documentación del proyecto ```  
+|-- requirements.txt ``` ``` ``` # Lista de dependencias  ```  
+|-- README.md ``` ``` ``` # Descripción general del proyecto  ```  
+
 - Submit a well-commented Python script containing your code.
 - Clearly present each step of the process, including data loading, preprocessing, model development, and evaluation.
 
