@@ -1,39 +1,27 @@
 from ast import literal_eval
 
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
-
 
 def impute(column):
-    column = column[0]
+    column = column.iloc[0]  # Use iloc for positional indexing
     if not isinstance(column, list):
         return "".join(literal_eval(column))
     else:
         return column
 
 
-def process_text(text):
-    # Tokenize the text
-    tokens = word_tokenize(text)
-
-    # Remove stop words
-    stop_words = set(stopwords.words('english'))
-    filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
-
-    # Stem the tokens
-    stemmer = PorterStemmer()
-    stemmed_tokens = [stemmer.stem(token) for token in filtered_tokens]
-
-    # Join the stemmed tokens back into a single string
-    processed_text = ' '.join(stemmed_tokens)
-
-    return processed_text
-
-
 def preprocess_data(data):
-    # Split country from hotel address so we can easily work with it
+    # Remove not useful columns
+    columns_to_drop = ['Additional_Number_of_Scoring',
+                       'Review_Date', 'Reviewer_Nationality',
+                       'Negative_Review', 'Review_Total_Negative_Word_Counts',
+                       'Total_Number_of_Reviews', 'Positive_Review',
+                       'Review_Total_Positive_Word_Counts',
+                       'Total_Number_of_Reviews_Reviewer_Has_Given', 'Reviewer_Score',
+                       'days_since_review', 'lat', 'lng']
+
+    data.drop(columns=columns_to_drop, inplace=True)
+
+    # Split country from hotel address, so we can easily work with it
     data["countries"] = data.Hotel_Address.apply(lambda x: x.split(' ')[-1])
 
     # String 'list' of tags to an actual list
