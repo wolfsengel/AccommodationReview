@@ -8,7 +8,7 @@ stop_words = set(stopwords.words('english'))
 lemm = WordNetLemmatizer()
 
 
-def recommend_hotel(location, description):
+def recommend_hotel(data, location, description):
     description_tokens = word_tokenize(description.lower())
     filtered = {word for word in description_tokens if not word in stop_words}
     filtered_set = set([lemm.lemmatize(word) for word in filtered])
