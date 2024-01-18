@@ -1,9 +1,11 @@
+import os
+
 from src.data_loader import DataLoader
 from src.data_preprocessor import preprocess_data
 from src.model import AccommodationModel
 from src.evaluation import evaluate_model
 
-DATA_PATH = 'C:\\Users\\angel\\PycharmProjects\\AccommodationReview\\data\\Accommodation_Reviews.csv'
+DATA_PATH = os.path.join('..', 'data', 'Accommodation_Reviews.csv')
 
 
 def run_project():
