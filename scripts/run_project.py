@@ -3,7 +3,6 @@ import os
 from src.data_loader import DataLoader
 from src.data_preprocessor import preprocess_data
 from src.model import AccommodationModel
-from src.evaluation import evaluate_model
 
 DATA_PATH = os.path.join('..', 'data', 'Accommodation_Reviews.csv')
 
@@ -19,10 +18,6 @@ def run_project():
     # Train model
     model = AccommodationModel()
     model.train_model(processed_data)
-
-    # Evaluate model
-    evaluation_result = evaluate_model(model, processed_data)
-    print("Evaluation Result:", evaluation_result)
 
 
 if __name__ == "__main__":
