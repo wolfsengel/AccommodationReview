@@ -1,11 +1,27 @@
 import tkinter as tk
 from tkinter import ttk
 
+from scripts.run_project import DATA_PATH
+from src.data_loader import DataLoader
+from src.data_preprocessor import preprocess_data
+from src.model import recommend_hotel
+
+# Load data
+data_loader = DataLoader(DATA_PATH)
+data = data_loader.load_data()
+
+# preprocess data
+processed_data = preprocess_data(data)
+
 
 def on_button_click():
+    # recommendation system
     selected_country = combo_box.get()
     user_input = entry.get()
-    result_label.config(text=f"Selected country : {selected_country}\nSent info: {user_input}")
+
+    # filter the hotel name and the score
+    result = recommend_hotel(processed_data, selected_country, user_input)
+    result_label.config(text=result)
 
 
 # Crear la ventana principal
