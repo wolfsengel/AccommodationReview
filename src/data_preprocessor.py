@@ -1,39 +1,45 @@
+from ast import literal_eval
+
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-class DataPreprocessor:
-    def preprocess_data(self, data):
-        # Combine Positive and Negative reviews for better context
-        data['combined_reviews'] = data['Positive_Review'] + ' ' + data['Negative_Review']
+def impute(column):
+    column = column[0]
+    if not isinstance(column, list):
+        return "".join(literal_eval(column))
+    else:
+        return column
 
-        # Tokenization, stop words removal, and stemming
-        data['processed_reviews'] = data['combined_reviews'].apply(self.process_text)
 
-        # TF-IDF Vectorization
-        tfidf_vectorizer = TfidfVectorizer()
-        tfidf_matrix = tfidf_vectorizer.fit_transform(data['processed_reviews'])
+def process_text(text):
+    # Tokenize the text
+    tokens = word_tokenize(text)
 
-        data['tfidf_matrix'] = list(tfidf_matrix)
+    # Remove stop words
+    stop_words = set(stopwords.words('english'))
+    filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
 
-        return data
+    # Stem the tokens
+    stemmer = PorterStemmer()
+    stemmed_tokens = [stemmer.stem(token) for token in filtered_tokens]
 
-    def process_text(self, text):
-        # Tokenize the text
-        tokens = word_tokenize(text)
+    # Join the stemmed tokens back into a single string
+    processed_text = ' '.join(stemmed_tokens)
 
-        # Remove stop words
-        stop_words = set(stopwords.words('english'))
-        filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+    return processed_text
 
-        # Stem the tokens
-        stemmer = PorterStemmer()
-        stemmed_tokens = [stemmer.stem(token) for token in filtered_tokens]
 
-        # Join the stemmed tokens back into a single string
-        processed_text = ' '.join(stemmed_tokens)
+def preprocess_data(data):
+    # Split country from hotel address so we can easily work with it
+    data["countries"] = data.Hotel_Address.apply(lambda x: x.split(' ')[-1])
 
-        return processed_text
+    # String 'list' of tags to an actual list
+    data["Tags"] = data[["Tags"]].apply(impute, axis=1)
+
+    # Lowercase countries and tags
+    data['countries'] = data['countries'].str.lower()
+    data['Tags'] = data['Tags'].str.lower()
+    return data

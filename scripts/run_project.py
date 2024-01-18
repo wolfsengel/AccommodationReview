@@ -1,17 +1,18 @@
 from src.data_loader import DataLoader
-from src.data_preprocessor import DataPreprocessor
+from src.data_preprocessor import preprocess_data
 from src.model import AccommodationModel
 from src.evaluation import evaluate_model
+
+DATA_PATH = 'C:\\Users\\angel\\PycharmProjects\\AccommodationReview\\data\\Accommodation_Reviews.csv'
 
 
 def run_project():
     # Load data
-    data_loader = DataLoader('your_dataset.csv')
+    data_loader = DataLoader(DATA_PATH)
     data = data_loader.load_data()
 
     # Preprocess data
-    data_preprocessor = DataPreprocessor()
-    processed_data = data_preprocessor.preprocess_data(data)
+    processed_data = preprocess_data(data)
 
     # Train model
     model = AccommodationModel()
