@@ -12,7 +12,7 @@ def recommend_hotel(data, location, description):
     description_tokens = word_tokenize(description.lower())
 
     # Remove stop words and lemmatize
-    filtered = {word for word in description_tokens if not word in stop_words}
+    filtered = {word for word in description_tokens if word not in stop_words}
     filtered_set = set([lemm.lemmatize(word) for word in filtered])
 
     # Filter the data by location

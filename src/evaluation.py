@@ -1,41 +1,58 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
-from scripts.run_project import DATA_PATH
+import nltk
+from sklearn.feature_extraction.text import TfidfVectorizer as  tfidf
+from sklearn.metrics.pairwise import linear_kernel as lk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
-# Load the data
-data = pd.read_csv(DATA_PATH)
 
-# Combine positive and negative reviews into a single column
-data['Text'] = data['Positive_Review'] + ' ' + data['Negative_Review']
+nltk.download('stopwords')
+nltk.download('punkt')
 
-# Create a binary column indicating sentiment (1 for positive, 0 for negative)
-data['Sentiment'] = (data['Reviewer_Score'] > 7.5).astype(int)
+# Cargar el dataset
+dataset = pd.read_csv('../data/Accommodation_Reviews.csv')
 
-# Drop unnecessary columns
-data = data[['Text', 'Sentiment']]
+# Reducir el dataset a solo 1000 filas
+dataset = dataset.iloc[:1000]
 
-# Text preprocessing (tokenization, stop word removal, lemmatization)
-# You may need to customize this based on your specific requirements
-vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
-X = vectorizer.fit_transform(data['Text'])
+# Combinar las columnas relevantes para el análisis
+dataset['review_negativa'] = dataset['Negative_Review'] + ' ' + dataset['Tags']
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, data['Sentiment'], test_size=0.2, random_state=42)
+# Preprocesamiento de texto
+stop_words = set(stopwords.words('english'))
 
-# Train a logistic regression model
-model = LogisticRegression()
-model.fit(X_train, y_train)
 
-# Make predictions on the test set
-predictions = model.predict(X_test)
+def preprocess_text(text):
+    # Tokenización y eliminación de stopwords
+    tokens = word_tokenize(text.lower())
+    tokens = [word for word in tokens if word.isalpha() and word not in stop_words]
+    return ' '.join(tokens)
 
-# Evaluate the model
-accuracy = accuracy_score(y_test, predictions)
-print(f'Accuracy: {accuracy:.2f}')
 
-# Display additional metrics
-print(classification_report(y_test, predictions))
+# Aplicar preprocesamiento al conjunto de datos
+dataset['review_negativa'] = dataset['review_negativa'].apply(preprocess_text)
 
+# Crear matriz TF-IDF para las revisiones negativas
+tfidf_vectorizer_neg = tfidf()
+
+tfidf_matrix_neg = tfidf_vectorizer_neg.fit_transform(dataset['review_negativa'])
+
+# Calcular similitud entre revisiones negativas
+cosine_sim_neg = lk(tfidf_matrix_neg, tfidf_matrix_neg)
+
+
+# Función para obtener recomendaciones
+def get_recommendations(hotel_index, similarity_matrix, n=5):
+    sim_scores = list(enumerate(similarity_matrix[hotel_index]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:n + 1]
+    hotel_indices = [i[0] for i in sim_scores]
+    return dataset['Hotel_Name'].iloc[hotel_indices]
+
+
+# Ejemplo de recomendación para un hotel específico (cambia el índice según tu necesidad)
+indice_hotel = 60
+recommendations = get_recommendations(indice_hotel, cosine_sim_neg)
+
+print(f"Recomendaciones para el hotel '{dataset['Hotel_Name'].iloc[indice_hotel]}':")
+print(recommendations)
