@@ -1,8 +1,7 @@
-from scripts.run_project import DATA_PATH
 from src.data_loader import DataLoader
 
 # Load data
-data_loader = DataLoader(DATA_PATH)
+data_loader = DataLoader()
 data = data_loader.load_data()
 
 # add new column

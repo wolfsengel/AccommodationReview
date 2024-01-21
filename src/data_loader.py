@@ -11,5 +11,10 @@ class DataLoader:
         self.file_path = DATA_PATH
 
     def load_data(self):
+
+        # Load the dataset
         data = pd.read_csv(self.file_path)
+
+        # Data Sample of 10% of the dataset to reduce computational cost
+        data = data.sample(frac=0.1, replace=False, random_state=42)
         return data

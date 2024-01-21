@@ -1,8 +1,6 @@
 import tkinter as tk
-from tkinter import ttk
 
 from src.data_loader import DataLoader
-from src.data_preprocessor import preprocess_data
 from src.evaluation import get_recommendations
 
 # Load data
@@ -12,8 +10,9 @@ data = data_loader.load_data()
 
 def on_button_click(entry, result_label):
 
-    user_input = entry.get()
+    user_input = entry.get().to_Int()
     # filter the hotel name and the score
+    result_label.config(text="Loading...")
     result = get_recommendations(data, user_input)
     result_label.config(text=result)
 

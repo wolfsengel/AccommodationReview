@@ -19,6 +19,7 @@ def on_button_click(combo_box, entry, result_label):
     user_input = entry.get()
 
     # filter the hotel name and the score
+    result_label.config(text="Loading...")
     result = recommend_hotel(processed_data, selected_country, user_input)
     result_label.config(text=result)
 
