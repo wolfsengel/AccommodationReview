@@ -14,6 +14,14 @@ processed_data = preprocess_data(data)
 
 
 def on_button_click(combo_box, entry, result_label):
+    """
+    Function to handle the button click event.
+
+    :param combo_box:
+    :param entry:
+    :param result_label:
+    :return:
+    """
     # recommendation system
     selected_country = combo_box.get()
     user_input = entry.get()
@@ -25,36 +33,45 @@ def on_button_click(combo_box, entry, result_label):
 
 
 def show_frame_nu():
-    # Crear la ventana principal
-    ventana = tk.Toplevel()
+    """
+    Function to show the recommendation tool frame.
+    :return:
+    """
+    # Create the main window
+    ventana = tk.Tk()
     ventana.title("Accommodation Finder")
     ventana.geometry("600x400")
     ventana.resizable(False, False)
-    # color de fondo
+    # background color
     ventana.config(bg="black")
 
-    # Crear una etiqueta
+    # Create a label
     title_label = tk.Label(ventana, text="Accommodation Finder GUI", font=("Arial", 20))
     title_label.config(fg="white", bg="black")
     title_label.pack(pady=10)
 
-    # Crear un ComboBox con algunos países
+    # Create a combo box
     paises = ["Netherlands", "UK", "France", "Spain", "Italy", "Austria"]
     combo_box = ttk.Combobox(ventana, values=paises, state="readonly")
     combo_box.set("¿Where are you going?")
     combo_box.pack(pady=10)
 
-    # Crear un cuadro de texto
+    # Create a text box
     entry = tk.Entry(ventana, width=30)
     entry.pack(pady=10)
 
-    # Crear un botón de aceptar
+    # Create a button
     find_button = tk.Button(ventana, text="Find", command=lambda: on_button_click(combo_box, entry, result_label))
     find_button.pack(pady=10)
 
-    # Crear una etiqueta para mostrar el resultado
+    # Create a label to show the result
     result_label = tk.Label(ventana, text="")
     result_label.pack(pady=10)
 
-    # Iniciar el bucle principal de la interfaz gráfica
+    # Start the main loop of the GUI
     ventana.mainloop()
+
+
+# main
+if __name__ == "__main__":
+    show_frame_nu()

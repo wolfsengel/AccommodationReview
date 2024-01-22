@@ -1,5 +1,4 @@
 from src.data_loader import DataLoader
-
 # Load data
 data_loader = DataLoader()
 data = data_loader.load_data()

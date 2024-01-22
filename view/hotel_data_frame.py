@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+
+from src.evaluation import show_wordcloud
 from src.hotel_model import get_worst_values_for_hotel, get_best_values_for_hotel
 from src.data_loader import DataLoader
 from src.hotel_model import create_hotel_objects
@@ -14,26 +16,33 @@ def update_results(event):
 
 
 def on_select(event):
-    selected_index = results_listbox.curselection()
-    if selected_index:
-        selected_index = selected_index[0]
-        selected_hotel = hotel_objects[selected_index]
+    selected_index_filtered = results_listbox.curselection()
+    if selected_index_filtered:
+        selected_index_filtered = selected_index_filtered[0]
+        selected_hotel_name = matching_hotels[selected_index_filtered]
+
+        # Find the corresponding index in the original list
+        selected_index_original = [i for i, hotel in enumerate(hotel_objects) if hotel.name == selected_hotel_name][0]
+        selected_hotel = hotel_objects[selected_index_original]
+
         search_var.set(selected_hotel.name)
         update_results(None)
 
         # Display detailed info in the Text widget
         info_text.delete(1.0, tk.END)
         info_text.insert(tk.END, str(selected_hotel))
-        info_text.insert(tk.END, f"Worst Features: {get_worst_values_for_hotel(data,selected_hotel.name)}\n")
-        info_text.insert(tk.END, f"Best Features: {get_best_values_for_hotel(data,selected_hotel.name)}\n")
+        info_text.insert(tk.END, f"Worst Features: {get_worst_values_for_hotel(data, selected_hotel.name)}\n")
+        info_text.insert(tk.END, f"Best Features: {get_best_values_for_hotel(data, selected_hotel.name)}\n")
 
 
-# Assuming you have a dataset or DataFrame called 'data'
-# You can replace this with your actual dataset loading logic
+# Load the dataset
 data = DataLoader().load_data()
 
 # Create hotel objects using the provided function
 hotel_objects = create_hotel_objects(data)
+
+# Matching hotels
+# matching_hotels = []
 
 # Create the main window
 root = tk.Tk()
@@ -67,6 +76,10 @@ results_listbox.configure(yscrollcommand=results_scrollbar.set)
 # Create a Text widget for detailed information
 info_text = tk.Text(root, height=10, width=40)
 info_text.grid(row=0, column=3, rowspan=3, padx=10, pady=10, sticky=tk.W)
+
+# Create a button for the world cloud
+wordcloud_button = ttk.Button(root, text="Word Cloud", command=show_wordcloud(data["Negative_Review"], "Worst Features"))
+wordcloud_button.grid(row=2, column=1, padx=10, pady=10, sticky=tk.W)
 
 # Start the main event loop
 root.mainloop()
