@@ -1,4 +1,4 @@
-import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -6,7 +6,8 @@ from sklearn.svm import SVC
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-import nltk
+from scipy.sparse import hstack
+# nltk
 
 from src.data_loader import DataLoader
 
@@ -59,13 +60,12 @@ X_train_text_vectors = vectorizer.fit_transform(X_train['processed_reviews'])
 X_test_text_vectors = vectorizer.transform(X_test['processed_reviews'])
 
 # Combine text features with other features
-X_train_combined = pd.concat([pd.DataFrame(X_train_text_vectors.toarray()),
-                              X_train[['Review_Total_Positive_Word_Counts', 'Review_Total_Negative_Word_Counts']]],
-                             axis=1)
+X_train_combined = hstack([X_train_text_vectors,
+                           np.array(
+                               X_train[['Review_Total_Positive_Word_Counts', 'Review_Total_Negative_Word_Counts']])])
 
-X_test_combined = pd.concat([pd.DataFrame(X_test_text_vectors.toarray()),
-                             X_test[['Review_Total_Positive_Word_Counts', 'Review_Total_Negative_Word_Counts']]],
-                            axis=1)
+X_test_combined = hstack([X_test_text_vectors,
+                          np.array(X_test[['Review_Total_Positive_Word_Counts', 'Review_Total_Negative_Word_Counts']])])
 
 # Train a Support Vector Machine classifier
 classifier = SVC(kernel='linear')
@@ -81,7 +81,7 @@ print(f"Accuracy: {accuracy:.2f}")
 # Classification report
 print("Classification Report:")
 print(classification_report(y_test, y_pred))
-
+"""
 # Example usage of the model
 new_reviews = ["I love this Hotel!", "The worst experience ever.", "I will never come back again.",
                "I hate this hotel.", "I dislike this hotel.",
@@ -90,15 +90,14 @@ new_reviews_processed = [preprocess_text(review) for review in new_reviews]
 new_reviews_text_vectors = vectorizer.transform(new_reviews_processed)
 
 # Combine text features with other features for new reviews
-new_reviews_combined = pd.concat([pd.DataFrame(new_reviews_text_vectors.toarray()),
-                                  pd.DataFrame({'Review_Total_Positive_Word_Counts': [len(word_tokenize(review))
-                                                                                      for review in new_reviews],
-                                                'Review_Total_Negative_Word_Counts': [len(word_tokenize(review))
-                                                                                      for review in new_reviews]})
-                                  ], axis=1)
+new_reviews_combined = hstack([new_reviews_text_vectors,
+                               np.array([[len(word_tokenize(review)) for review in new_reviews],
+                                         [len(word_tokenize(review)) for review in new_reviews]]).T])
+
 
 predictions = classifier.predict(new_reviews_combined)
 
 for review, prediction in zip(new_reviews, predictions):
     sentiment = "Good" if prediction == 1 else "Bad"
     print(f"Review: {review} | Sentiment: {sentiment}")
+"""
