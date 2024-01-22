@@ -1,8 +1,6 @@
-from view.main_frame import show_main_frame
-
 
 def run_project():
-    show_main_frame()
+    print("Running project...")
 
 
 if __name__ == "__main__":

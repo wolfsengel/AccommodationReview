@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.evaluation import show_wordcloud
 from src.hotel_model import get_worst_values_for_hotel, get_best_values_for_hotel
 from src.data_loader import DataLoader
 from src.hotel_model import create_hotel_objects
@@ -19,8 +18,7 @@ def on_select(event):
     selected_index_filtered = results_listbox.curselection()
     if selected_index_filtered:
         selected_index_filtered = selected_index_filtered[0]
-        selected_hotel_name = matching_hotels[selected_index_filtered]
-
+        selected_hotel_name = results_listbox.get(selected_index_filtered)
         # Find the corresponding index in the original list
         selected_index_original = [i for i, hotel in enumerate(hotel_objects) if hotel.name == selected_hotel_name][0]
         selected_hotel = hotel_objects[selected_index_original]
@@ -41,45 +39,44 @@ data = DataLoader().load_data()
 # Create hotel objects using the provided function
 hotel_objects = create_hotel_objects(data)
 
-# Matching hotels
-# matching_hotels = []
-
 # Create the main window
 root = tk.Tk()
-root.title("Hotel Search App")
+root.title("Hotel Stats")
 root.resizable(False, False)
-root.geometry("800x400")
+root.geometry("600x400")
+root.config(bg="black")
 
 # Create variables
 search_var = tk.StringVar()
 
+# Create a title label
+title_label = tk.Label(root, text="Hotel Stats", font=("Arial", 20))
+title_label.config(fg="white", bg="black")
+title_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky=tk.W)
+
 # Create GUI components
 # Create a label
 search_label = ttk.Label(root, text="Hotel name:")
-search_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
+search_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
 
 # Create an entry box
 search_entry = ttk.Entry(root, textvariable=search_var)
-search_entry.grid(row=0, column=1, padx=10, pady=10, sticky=tk.W + tk.E)
+search_entry.grid(row=1, column=1, padx=10, pady=10, sticky=tk.W + tk.E)
 search_entry.bind("<KeyRelease>", update_results)
 
 # Create a listbox
 results_listbox = tk.Listbox(root, selectmode=tk.SINGLE, height=10)
-results_listbox.grid(row=1, column=1, padx=10, pady=10, sticky=tk.W)
+results_listbox.grid(row=2, column=1, padx=10, pady=10, sticky=tk.W)
 results_listbox.bind("<ButtonRelease-1>", on_select)
 
 # Create a scrollbar
 results_scrollbar = ttk.Scrollbar(root, orient=tk.VERTICAL, command=results_listbox.yview)
-results_scrollbar.grid(row=1, column=2, sticky=tk.N + tk.S)
+results_scrollbar.grid(row=1, column=2, rowspan=4, sticky=tk.N + tk.S)
 results_listbox.configure(yscrollcommand=results_scrollbar.set)
 
 # Create a Text widget for detailed information
 info_text = tk.Text(root, height=10, width=40)
-info_text.grid(row=0, column=3, rowspan=3, padx=10, pady=10, sticky=tk.W)
-
-# Create a button for the world cloud
-wordcloud_button = ttk.Button(root, text="Word Cloud", command=show_wordcloud(data["Negative_Review"], "Worst Features"))
-wordcloud_button.grid(row=2, column=1, padx=10, pady=10, sticky=tk.W)
+info_text.grid(row=0, column=3, rowspan=4, columnspan=3, padx=10, pady=10, sticky=tk.W)
 
 # Start the main event loop
 root.mainloop()
