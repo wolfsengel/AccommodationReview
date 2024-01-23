@@ -16,5 +16,5 @@ class DataLoader:
         data = pd.read_csv(self.file_path)
 
         # Data Sample of 10% of the dataset to reduce computational cost
-        # data = data.sample(frac=0.5, replace=False, random_state=42)
+        data = data.sample(frac=0.1, replace=False, random_state=93)
         return data

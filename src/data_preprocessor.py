@@ -49,18 +49,18 @@ def preprocess_data(data):
     return data
 
 
-def get_wordnet_pos(pos_tag):
+def get_wordnet_pos(pos_tag_text):
     """
-    :param pos_tag: the pos tag of the word
+    :param pos_tag_text: the pos tag of the word
     :return pos_tag:
     """
-    if pos_tag.startswith('J'):
+    if pos_tag_text.startswith('J'):
         return wordnet.ADJ
-    elif pos_tag.startswith('V'):
+    elif pos_tag_text.startswith('V'):
         return wordnet.VERB
-    elif pos_tag.startswith('N'):
+    elif pos_tag_text.startswith('N'):
         return wordnet.NOUN
-    elif pos_tag.startswith('R'):
+    elif pos_tag_text.startswith('R'):
         return wordnet.ADV
     else:
         return wordnet.NOUN
