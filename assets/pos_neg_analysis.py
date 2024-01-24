@@ -5,7 +5,7 @@ from src.data_loader import DataLoader
 
 data = DataLoader().load_data()
 if data is not None:
-    positive_reviews = data[data['Reviewer_Score'] > 5]
+    positive_reviews = data[data['Reviewer_Score'] >= 5]
 
     # Define conditions for different types of reviews
     positive_and_negative = positive_reviews[(positive_reviews['Positive_Review'] != 'No Positive') &
@@ -24,8 +24,7 @@ if data is not None:
     num_no_positive_no_negative = len(no_positive_no_negative)
 
     # Plotting
-    labels = ['Positive and Negative', 'Positive but No Negative', 'No Positive but Negative',
-              'No Positive and No Negative']
+    labels = ['Pos & Neg', 'Pos & NoNeg', 'NoPos & Neg', 'NoPos & NoNeg']
     values = [num_positive_and_negative, num_positive_no_negative, num_no_positive_negative,
               num_no_positive_no_negative]
 
@@ -38,7 +37,9 @@ if data is not None:
     for bar, value in zip(bars, values):
         plt.text(bar.get_x() + bar.get_width() / 2 - 0.15, bar.get_height() + 0.1, str(value), ha='center')
 
-    plt.title('Positive Reviews Analysis')
+    plt.title('Positive Review Analysis')
     plt.xlabel('Review Type')
     plt.ylabel('Number of Reviews')
     plt.show()
+
+

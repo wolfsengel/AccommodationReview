@@ -1,33 +1,32 @@
-import pandas as pd
-import wordcloud
-from nltk.sentiment import SentimentIntensityAnalyzer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-from src.data_preprocessor import clean_text
+from matplotlib import pyplot as plt
+
+from src.data_loader import DataLoader
 from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-import src.data_loader as dl
 
-# Load the dataset
-data = dl.DataLoader().load_data()
+from src.data_preprocessor import clean_text
 
-# Remove 'No Negative' or 'No Positive' from text
+# Load data
+data_loader = DataLoader()
+data = data_loader.load_data()
+
+# Unify the text in the 'Positive_Review' and 'Negative_Review' columns
 data['Positive_Review'] = data['Positive_Review'].apply(lambda x: x.replace("No Positive", ""))
 data['Negative_Review'] = data['Negative_Review'].apply(lambda x: x.replace("No Negative", ""))
-
-# Create a new column 'Review' that contains the positive and negative review text
 data['Review'] = data['Positive_Review'] + data['Negative_Review']
-columns_to_drop = ['Hotel_Address', 'Additional_Number_of_Scoring', 'Review_Date', 'Reviewer_Nationality',
-                   'Total_Number_of_Reviews', 'Average_Score', 'Tags', 'days_since_review',
-                   'Total_Number_of_Reviews_Reviewer_Has_Given', 'days_since_review', 'lat', 'lng']
 
-data.drop(columns=columns_to_drop, inplace=True)
+# Clean the text
+data['Review'] = data['Review'].apply(clean_text)
+# Wordcloud
+wordcloud = WordCloud(
+    background_color='white',
+    max_words=200,
+    max_font_size=40,
+    scale=3,
+    random_state=42
+).generate(str(data['Review']))
 
-# Generate a word cloud
-wordcloud = WordCloud(width=800, height=400, background_color='white').generate(data['Review'].to_string())
-
-# Display the generated word cloud using matplotlib
-plt.figure(figsize=(10, 5))
-plt.imshow(wordcloud, interpolation='bilinear')
+fig = plt.figure(1, figsize=(20, 20))
 plt.axis('off')
+plt.imshow(wordcloud)
 plt.show()
+

@@ -1,6 +1,3 @@
-from src.data_preprocessor import clean_text
-
-
 class Hotel:
     def __init__(self, name, average_score, data):
         """

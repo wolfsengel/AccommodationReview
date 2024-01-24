@@ -9,6 +9,8 @@ lemm = WordNetLemmatizer()
 
 def impute(column):
     """
+        Used to impute the tags column
+
         :param column:
         :return: column after imputing:
     """
@@ -21,6 +23,7 @@ def impute(column):
 
 def preprocess_data(data):
     """
+        Preprocess the data
         :param data: the dataset to be preprocessed
         :return data after preprocessing:
     """
@@ -51,6 +54,7 @@ def preprocess_data(data):
 
 def get_wordnet_pos(pos_tag_text):
     """
+    Used to get the pos tag of the word
     :param pos_tag_text: the pos tag of the word
     :return pos_tag:
     """

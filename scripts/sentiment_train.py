@@ -1,6 +1,5 @@
 import time
 
-import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
@@ -90,10 +89,6 @@ plt.title('Receiver Operating Characteristic (ROC) Curve')
 plt.legend(loc='lower right')
 plt.show()
 print("END in ", time.time() - current_time, " seconds")
-
-
-def predict_review(review):
-    return pipeline.predict([review])[0]
 
 
 '''

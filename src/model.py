@@ -17,8 +17,6 @@ def recommend_hotel(data, location, description):
     # Filter the data by location
     country = data[data['countries'] == location.lower()]
     country = country.set_index(np.arange(country.shape[0]))
-    list1 = []
-    list2 = []
     cos = []
 
     # Calculate the similarity between the description and the tags
