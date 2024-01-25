@@ -14,6 +14,7 @@ To implement the accommodation advisory tool, the following tools and technologi
   - NumPy: For numerical operations and computations.
   - Data visualisation.
   - NLTK (Natural Language Toolkit): For Natural Language Processing tasks.
+  - Look [requirements](./requirements.txt) for more.
 
 ## Dataset
 The dataset used for this project contains information about accommodation providers, including customer reviews and ratings.
